@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .clip {
+        cursor: pointer;
+      }
+      /* .name,
+      .table {
+        display: none;
+      }
+
+      .clip[data-alarm="critical"] + .name {
+        display: inline-block;
+      } */
+    </style>
+  </head>
+  <body>
+    <div class="frame">
+      <img
+        class="clip"
+        data-clicked="false"
+        src="./icon-title.png"
+        alt="clip"
+      />
+      <span class="name">title1</span>
+      <span class="table">table1</span>
+      <br />
+      <img
+        class="clip"
+        data-clicked="false"
+        src="./icon-title.png"
+        alt="clip"
+      />
+      <span class="name">title2</span>
+      <span class="table">table2</span>
+      <br />
+      <img
+        class="clip"
+        data-clicked="false"
+        src="./icon-title.png"
+        alt="clip"
+      />
+      <span class="name" data-alarm="">title3</span>
+      <span class="table">table3</span>
+      <br />
+      <img
+        class="clip"
+        data-alarm="critical"
+        data-clicked="false"
+        src="./icon-title.png"
+        alt="clip"
+      />
+      <span class="name" data-alarm="critical">title4심각</span>
+      <span class="table">table4</span>
+
+      <script>
+        /*
+          - 데이터 추가: clip 이미지에 data-clicked, data-alarm 추가
+          - over/out
+            - over이면 장비명 보이기
+            - out이면 장비명 감추기
+              - 예외: clicked="true"인 경우, 심각 발생인 경우
+          - click
+            - 클릭하면(clicked="false"일 때) 장비명 + 테이블 보이기
+            - 다시 클릭하면(clicked="true"일 때) 장비명 + 테이블 감추기
+              - 예외: 심각 발생인 경우 장비명은 패스
+            - clicked 토글해주기
+          - alarm
+            - over/out과 관계없이 무조건 장비명 보이기
+            - 클릭하면 테이블 보이기
+            - 다시 클릭하면 테이블 감추기
+              -> 장비명 클릭 이벤트 유지 
+        */
+        function onClickClip(event) {
+          const { target: clip } = event;
+          if (clip.className !== "clip") {
+            return;
+          }
+
+          const name = clip.nextElementSibling;
+          const table = name?.nextElementSibling;
+          if (
+            !name ||
+            name.className !== "name" ||
+            !table ||
+            table.className !== "table"
+          ) {
+            return;
+          }
+
+          const clicked = JSON.parse(clip.dataset.clicked);
+          if (!clicked) {
+            name.style.display = "inline";
+            table.style.display = "inline";
+          } else {
+            if (!name.dataset.alarm) {
+              name.style.display = "none";
+            }
+            table.style.display = "none";
+          }
+          clip.dataset.clicked = String(!clicked); // toggle
+        }
+
+        function onOverClip(event) {
+          const { target: clip } = event;
+          if (clip.className !== "clip") {
+            return;
+          }
+
+          const name = clip.nextElementSibling;
+          if (!name || name.className !== "name") {
+            return;
+          }
+
+          if (event.type === "mouseover") {
+            name.style.display = "inline";
+          } else {
+            const clicked = JSON.parse(clip.dataset.clicked);
+            if (clicked || name.dataset.alarm === "critical") {
+              return;
+            }
+            name.style.display = "none";
+          }
+        }
+
+        const frame = document.querySelector(".frame");
+        frame.addEventListener("click", onClickClip);
+        frame.addEventListener("mouseover", onOverClip);
+        frame.addEventListener("mouseout", onOverClip);
+
+        const names = document.querySelectorAll(".name");
+        for (let x of names) {
+          x.style.display = "none";
+        }
+        const table = document.querySelectorAll(".table");
+        for (let x of table) {
+          x.style.display = "none";
+        }
+        const alarmNames = document.querySelectorAll(
+          ".clip[data-alarm='critical'] + .name"
+        );
+        for (let x of alarmNames) {
+          x.style.display = "inline";
+        }
+      </script>
+    </div>
+  </body>
+</html>
