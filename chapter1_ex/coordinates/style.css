@@ -1,0 +1,34 @@
+body {
+  overflow: hidden;
+  height: 100vh;
+  margin: 0;
+  background-color: black;
+}
+
+#app {
+  position: relative;
+  height: 100%;
+}
+
+.target {
+  position: absolute;
+}
+
+.v-line {
+  position: absolute;
+  width: 1px;
+  height: 100%;
+  background-color: white;
+}
+
+.h-line {
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  background-color: white;
+}
+
+.coord {
+  position: absolute;
+  color: white;
+}
