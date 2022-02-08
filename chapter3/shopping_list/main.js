@@ -47,8 +47,11 @@ addBtn.addEventListener("click", () => {
   onAdd();
 });
 
-input.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+input.addEventListener("keydown", (event) => {
+  if (event.isComposing) {
+    return;
+  }
+  if (event.key === "Enter") {
     onAdd();
   }
 });
